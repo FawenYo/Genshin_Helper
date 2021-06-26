@@ -1,0 +1,70 @@
+{
+    "type": "bubble",
+    "hero": {
+        "type": "image",
+        "url": "https://via.placeholder.com/250",
+        "size": "full",
+        "aspectRatio": "2:1",
+        "aspectMode": "fit"
+    },
+    "body": {
+        "type": "box",
+        "layout": "vertical",
+        "contents": [{
+                "type": "text",
+                "text": "簽到成功！",
+                "size": "xxl",
+                "offsetBottom": "md",
+                "weight": "bold",
+                "align": "center"
+            },
+            {
+                "type": "box",
+                "layout": "horizontal",
+                "spacing": "md",
+                "contents": [{
+                        "type": "text",
+                        "text": "本日獎勵：",
+                        "size": "sm",
+                        "weight": "bold"
+                    },
+                    {
+                        "type": "text",
+                        "text": "冒險家的經驗 * 0",
+                        "size": "sm",
+                        "wrap": true,
+                        "weight": "bold",
+                        "color": "#3DBC13",
+                        "gravity": "center"
+                    }
+                ]
+            },
+            {
+                "type": "separator",
+                "margin": "md"
+            },
+            {
+                "type": "box",
+                "layout": "horizontal",
+                "spacing": "md",
+                "contents": [{
+                        "type": "text",
+                        "text": "簽到日期：",
+                        "size": "sm",
+                        "weight": "bold",
+                        "gravity": "center"
+                    },
+                    {
+                        "type": "text",
+                        "text": "1900/01/01 00:00:00",
+                        "size": "sm",
+                        "wrap": true,
+                        "weight": "bold",
+                        "gravity": "center"
+                    }
+                ],
+                "margin": "md"
+            }
+        ]
+    }
+}

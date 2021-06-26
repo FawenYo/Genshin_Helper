@@ -1,0 +1,8 @@
+{
+    "python.pythonPath": ".venv/bin/python3.8",
+    "python.terminal.activateEnvInCurrentTerminal": true,
+    "python.analysis.completeFunctionParens": true,
+    "python.analysis.extraPaths": [
+    ],
+    "git.ignoreLimitWarning": true
+}
