@@ -6,7 +6,7 @@ import pytz
 from linebot.models import FlexSendMessage
 
 sys.path.append(".")
-from helper import Award
+from genshin.helper import Award
 
 true = True
 

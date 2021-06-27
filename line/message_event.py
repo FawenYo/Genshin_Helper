@@ -1,21 +1,19 @@
+import pickle
 import sys
 
-from linebot import LineBotApi
 from linebot.models import *
 
 from . import flex_template
+from .line_config import handler, line_bot_api
 
 sys.path.append(".")
 
-import pickle
-
 import config
-from account import Account
-from helper import Helper
-
-line_bot_api = LineBotApi(config.LINE_CHANNEL_ACCESS_TOKEN)
+from genshin.helper import Helper
+from genshin.models import Account
 
 
+@handler.add(MessageEvent, message=(TextMessage, LocationMessage))
 def handle_message(event) -> None:
     """Event - Message
 

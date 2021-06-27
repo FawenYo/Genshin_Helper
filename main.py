@@ -5,9 +5,9 @@ from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
-from api.urls import api
-from line.urls import line_app
-from view import view
+from api.urls import url as api_url
+from line.urls import url as line_url
+from pages.urls import url as page_url
 
 app = FastAPI()
 
@@ -15,15 +15,14 @@ templates = Jinja2Templates(directory="templates")
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
 # View
-app.include_router(view)
+app.include_router(page_url)
 # LINE Bot
-app.include_router(line_app)
+app.include_router(line_url)
 # REST API
-app.include_router(api)
+app.include_router(api_url)
 
 
 if __name__ == "__main__":
-    # Local WSGI: Uvicorn
     port = int(os.getenv("PORT", 8001))
     uvicorn.run(
         "main:app",

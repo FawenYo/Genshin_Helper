@@ -1,8 +1,11 @@
+import sys
 from typing import Dict
 
 import requests
 
-from account import Account
+from .models import Account
+
+sys.path.append(".")
 from config import USER_AGENT
 
 
