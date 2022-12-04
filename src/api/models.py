@@ -1,10 +1,8 @@
 import pickle
-import sys
 
 from linebot import LineBotApi
 from linebot.models import *
 
-sys.path.append(".")
 import config
 from genshin.helper import Helper
 from genshin.models import Account

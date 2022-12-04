@@ -1,0 +1,20 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: genshin-signin
+spec:
+  schedule: "1 16 * * *"
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 1
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: signin
+            image: curlimages/curl
+            command:
+            - curl
+            - https://{{ .Values.HELPER_FQDN }}/api/start?token={{ .Values.TOKEN }}
+          restartPolicy: Never

@@ -1,16 +1,12 @@
 import pickle
-import sys
 
 from linebot.models import *
-
-from . import flex_template
-from .line_config import handler, line_bot_api
-
-sys.path.append(".")
 
 import config
 from genshin.helper import Helper
 from genshin.models import Account
+from line import flex_template
+from line.line_config import handler, line_bot_api
 
 
 @handler.add(MessageEvent, message=(TextMessage, LocationMessage))

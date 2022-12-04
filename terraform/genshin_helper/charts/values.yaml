@@ -1,0 +1,33 @@
+# Default values for genshin_helper
+sidecarContainers:
+- name: tls-sidecar
+  image: nginx
+  imagePullPolicy: IfNotPresent
+  resources:
+    requests:
+      memory: 50M
+    limits:
+      cpu: 100m
+      memory: 100M
+  volumeMounts:
+    - name: secret-volume
+      mountPath: /app/cert
+    - name: config-volume
+      mountPath: /etc/nginx/nginx.conf
+      subPath: nginx.conf
+  ports:
+  - name: https
+    containerPort: 443
+
+sidecarVolumes:
+- name: secret-volume
+  secret:
+    secretName: tls-secret
+    items:
+      - key: tls.crt
+        path: tls.crt
+      - key: tls.key
+        path: tls.key
+- name: config-volume
+  configMap:
+    name: nginx-config

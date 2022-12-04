@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 
-from . import views
+from line import views
 
-url = APIRouter(prefix="/api")
+url = APIRouter(prefix="/line")
 url.include_router(router=views.view)

@@ -1,12 +1,9 @@
-import sys
 from typing import Dict
 
 import requests
 
-from .models import Account
-
-sys.path.append(".")
 from config import USER_AGENT
+from genshin.models import Account
 
 
 class Award:

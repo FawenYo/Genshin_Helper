@@ -1,13 +1,8 @@
-import sys
-
 from fastapi import APIRouter
 from fastapi.responses import JSONResponse
 
-from . import models
-
-sys.path.append(".")
-
 import config
+from api import models
 
 view = APIRouter()
 

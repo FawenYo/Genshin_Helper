@@ -2,8 +2,8 @@ from fastapi import APIRouter, HTTPException, Request
 from linebot.exceptions import InvalidSignatureError
 from linebot.models import *
 
-from . import message_event
-from .line_config import handler
+from line import message_event
+from line.line_config import handler
 
 view = APIRouter()
 

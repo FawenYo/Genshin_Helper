@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: genshin-helper
+  namespace: {{ .Release.Namespace }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: genshin-helper
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: genshin-helper
+    spec:
+      containers:
+        - name: app
+          image: {{ .Values.ACR_PREFIX }}/{{ .Values.APP_IMAGE }}
+          imagePullPolicy: IfNotPresent
+          envFrom:
+            - secretRef:
+                name: genshin-secret
+          ports:
+            - containerPort: 8000
+              name: http
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 443
+              scheme: HTTPS
+            initialDelaySeconds: 15
+            periodSeconds: 60
+            timeoutSeconds: 3
+          resources:
+            limits:
+              cpu: 300m
+              memory: 256Mi
+            requests:
+              memory: 256Mi
+        {{- if .Values.sidecarContainers }}
+        {{- toYaml .Values.sidecarContainers | nindent 8 }}
+        {{- end }}
+      volumes:
+        {{- if .Values.sidecarContainers }}
+        {{- toYaml .Values.sidecarVolumes | nindent 8 }}
+        {{- end }}
