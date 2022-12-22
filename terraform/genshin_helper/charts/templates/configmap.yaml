@@ -51,7 +51,8 @@ data:
             ssl_certificate      /app/cert/tls.crt;
             ssl_certificate_key  /app/cert/tls.key;
 
-            location / {
+            location ^~/genshin/ {
+                rewrite ^/genshin/(.*)$ /$1 break;
                 proxy_pass http://localhost:8000;
 
                 proxy_set_header Connection "";

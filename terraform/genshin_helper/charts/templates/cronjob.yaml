@@ -16,5 +16,5 @@ spec:
             image: curlimages/curl
             command:
             - curl
-            - https://{{ .Values.HELPER_FQDN }}/api/start?token={{ .Values.TOKEN }}
+            - https://{{ .Values.HELPER_FQDN }}/genshin/api/start?token={{ .Values.TOKEN }}
           restartPolicy: Never
