@@ -21,7 +21,6 @@ class Helper:
         self.cookie_token: str = account.cookie_token
         self.ltoken: str = account.ltoken
         self.ltuid: str = account.ltuid
-        self.login_ticket: str = account.login_ticket
 
     def get_month_award(
         self, act_id: str = "e202102251931481", lang: str = "zh-tw"
@@ -59,7 +58,7 @@ class Helper:
         payload = {"act_id": "e202102251931481"}
         headers = {
             "Accept-Encoding": "application/json, text/plain, */*",
-            "Cookie": f"mi18nLang={lang}; _MHYUUID={self.uuid}; account_id={self.account_id}; cookie_token={self.cookie_token}; ltoken={self.ltoken}; ltuid={self.ltuid}; login_ticket={self.login_ticket}",
+            "Cookie": f"mi18nLang={lang}; _MHYUUID={self.uuid}; account_id={self.account_id}; cookie_token={self.cookie_token}; ltoken={self.ltoken}; ltuid={self.ltuid}",
             "Referer": "https://webstatic-sea.mihoyo.com/",
             "User-Agent": USER_AGENT,
         }
@@ -80,7 +79,7 @@ class Helper:
         """
         headers = {
             "Accept-Encoding": "gzip, deflate, br",
-            "Cookie": f"mi18nLang={lang}; _MHYUUID={self.uuid}; account_id={self.account_id}; cookie_token={self.cookie_token}; ltoken={self.ltoken}; ltuid={self.ltuid}; login_ticket={self.login_ticket}",
+            "Cookie": f"mi18nLang={lang}; _MHYUUID={self.uuid}; account_id={self.account_id}; cookie_token={self.cookie_token}; ltoken={self.ltoken}; ltuid={self.ltuid}",
             "Referer": "https://webstatic-sea.mihoyo.com/",
             "User-Agent": USER_AGENT,
         }

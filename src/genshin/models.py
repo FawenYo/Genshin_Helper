@@ -7,7 +7,6 @@ class Account:
         self.cookie_token: str = ""
         self.ltoken: str = ""
         self.ltuid: str = ""
-        self.login_ticket: str = ""
 
         # Parse Cookies
         self.parse_cookies()
@@ -19,7 +18,6 @@ class Account:
             is_required = False
             required_info = [
                 "_MHYUUID",
-                "login_ticket",
                 "account_id",
                 "cookie_token",
                 "ltoken",
@@ -34,8 +32,6 @@ class Account:
 
                 if key == "_MHYUUID":
                     self.uuid = value
-                elif key == "login_ticket":
-                    self.login_ticket = value
                 elif key == "account_id":
                     self.account_id = value
                 elif key == "cookie_token":
