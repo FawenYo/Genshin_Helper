@@ -7,6 +7,9 @@ from genshin.helper import Helper
 from genshin.models import Account
 from line import flex_template
 from line.line_config import handler, line_bot_api
+from utils.logging_util import get_logger
+
+logger = get_logger()
 
 
 @handler.add(MessageEvent, message=(TextMessage, LocationMessage))
@@ -39,9 +42,15 @@ def handle_message(event) -> None:
                 if result["retcode"] != 0:
                     reply_message = TextSendMessage(text="登入失敗，請重新登入！")
                 else:
-                    users = pickle.loads(config.DATABASE.get("users"))
+                    try:
+                        users = pickle.loads(config.DATABASE.get("users"))
+                        logger.info("Get users from database")
+                    except:
+                        users = {}
+                        logger.info("Create new users")
                     users[user_id] = cookie
                     config.DATABASE.set("users", pickle.dumps(users))
+                    logger.info("Set user to database")
 
                     reply_message = TextSendMessage(text="登入成功！ 每天半夜 01:00 自動幫您簽到！")
             except:

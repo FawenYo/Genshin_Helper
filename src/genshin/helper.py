@@ -1,9 +1,10 @@
-from typing import Dict
-
 import requests
 
 from config import USER_AGENT
 from genshin.models import Account
+from utils.logging_util import get_logger
+
+logger = get_logger()
 
 
 class Award:
@@ -15,7 +16,7 @@ class Award:
 
 class Helper:
     def __init__(self, account: Account) -> None:
-        self.awards: Dict[Award] = {}
+        self.awards: dict[int, Award] = {}
         self.account_id: str = account.account_id
         self.uuid: str = account.uuid
         self.cookie_token: str = account.cookie_token
@@ -67,6 +68,7 @@ class Helper:
             headers=headers,
             params=payload,
         ).json()
+        logger.debug(f"Sign in result: {response}")
 
         return self.account_status()
 
@@ -88,5 +90,6 @@ class Helper:
             url=f"https://hk4e-api-os.mihoyo.com/event/sol/info?lang=zh-tw&act_id={act_id}",
             headers=headers,
             params=payload,
-        )
-        return response.json()
+        ).json()
+        logger.debug(f"Account status: {response}")
+        return response
