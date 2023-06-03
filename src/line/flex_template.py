@@ -4,7 +4,7 @@ from datetime import datetime
 import pytz
 from linebot.models import FlexSendMessage
 
-from genshin.helper import Award
+from utils.genshin_models import Award
 
 true = True
 taipei_timezone = pytz.timezone("Asia/Taipei")

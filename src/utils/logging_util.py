@@ -1,7 +1,7 @@
 import logging
 import os
 
-# Set outside of the function to prevent re-initialization
+# Set outside from the function to prevent re-initialization
 IS_INITIALIZED = False
 
 

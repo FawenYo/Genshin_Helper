@@ -1,17 +1,10 @@
 import requests
 
 from config import USER_AGENT
-from genshin.models import Account
+from utils.genshin_models import Account, Award
 from utils.logging_util import get_logger
 
 logger = get_logger()
-
-
-class Award:
-    def __init__(self, name: str, count: int, icon: str) -> None:
-        self.name: str = name
-        self.count: int = count
-        self.icon: str = icon
 
 
 class Helper:

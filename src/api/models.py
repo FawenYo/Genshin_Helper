@@ -4,9 +4,9 @@ from linebot import LineBotApi
 from linebot.models import *
 
 import config
-from genshin.helper import Helper
-from genshin.models import Account
 from line import flex_template
+from utils.genshin_models import Account
+from utils.helper import Helper
 
 line_bot_api = LineBotApi(config.LINE_CHANNEL_ACCESS_TOKEN)
 

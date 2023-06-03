@@ -44,6 +44,12 @@ resource "helm_release" "redis" {
     type = "string"
   }
 
+  set {
+    name  = "replica.replicaCount"
+    value = 1
+    type  = "auto"
+  }
+
   set_sensitive {
     name  = "auth.password"
     value = random_password.redis_password.result

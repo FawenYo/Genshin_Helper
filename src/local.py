@@ -1,8 +1,8 @@
 from tqdm import tqdm
 
-from genshin.helper import Award, Helper
-from genshin.models import Account
 from src.local_config import cookies
+from utils.genshin_models import Account, Award
+from utils.helper import Helper
 from utils.logging_util import get_logger
 
 logger = get_logger()

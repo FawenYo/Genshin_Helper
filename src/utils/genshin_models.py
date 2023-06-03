@@ -40,3 +40,10 @@ class Account:
                     self.ltoken = value
                 elif key == "ltuid":
                     self.ltuid = value
+
+
+class Award:
+    def __init__(self, name: str, count: int, icon: str) -> None:
+        self.name: str = name
+        self.count: int = count
+        self.icon: str = icon
