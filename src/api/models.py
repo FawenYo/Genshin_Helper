@@ -1,40 +1,30 @@
 import pickle
 
 from linebot import LineBotApi
-from linebot.models import *
 
 import config
-from line import flex_template
+from line.controller import handle_sign_result
 from utils.genshin_models import Account
 from utils.helper import Helper
+from utils.logging_util import get_logger
 
+logger = get_logger()
 line_bot_api = LineBotApi(config.LINE_CHANNEL_ACCESS_TOKEN)
 
 
-def daily_sign_in() -> None:
+async def daily_sign_in() -> None:
     """Daily Sign In"""
     users = pickle.loads(config.DATABASE.get("users"))
     for user_id, cookie in users.items():
+        profile = line_bot_api.get_profile(user_id)
+        display_name = profile.display_name
         account = Account(cookies=cookie)
 
         helper = Helper(account=account)
         result = helper.run()
 
-        # Failed to login
-        if result["retcode"] != 0:
-            reply_message = TextSendMessage(text="登入失敗，請重新綁定帳號！")
-            line_bot_api.push_message(user_id, reply_message)
-
-        # Failed to sign
-        elif not result["data"]["is_sign"]:
-            reply_message = TextSendMessage(text="簽到失敗！ 請通知作者！")
-            line_bot_api.push_message(user_id, reply_message)
-
-        # Successfully signed
-        else:
-            total_sign_day = result["data"]["total_sign_day"]
-            award = helper.awards[total_sign_day]
-
-            # Push result to LINE Bot
-            reply_message = flex_template.sign_award(award=award)
-            line_bot_api.push_message(user_id, reply_message)
+        reply_message = handle_sign_result(
+            helper=helper, display_name=display_name, user_id=user_id, result=result
+        )
+        # Push Message
+        line_bot_api.push_message(user_id, reply_message)

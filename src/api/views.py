@@ -3,6 +3,9 @@ from fastapi.responses import JSONResponse
 
 import config
 from api import models
+from utils.logging_util import get_logger
+
+logger = get_logger()
 
 view = APIRouter()
 
@@ -18,7 +21,9 @@ async def start(token: str = "") -> JSONResponse:
         JSONResponse: Status message.
     """
     if token != config.TOKEN:
+        logger.error(f"Token invalid! Token: {token}")
         return JSONResponse({"status": "Failed", "error_message": "Token invalid!"})
 
-    models.daily_sign_in()
+    logger.info("Start sign in job")
+    await models.daily_sign_in()
     return JSONResponse({"status": "Success", "message": "Job done!"})

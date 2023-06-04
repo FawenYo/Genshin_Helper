@@ -109,24 +109,12 @@ def handle_message(event) -> None:
                 helper = Helper(account=account)
                 result = helper.run()
 
-                if result["retcode"] != 0:
-                    logger.error(
-                        f"User: {display_name} ({user_id}). status_code: login failed"
-                    )
-                    reply_message = TextSendMessage(text="登入失敗，請重新登入！")
-                elif not result["data"]["is_sign"]:
-                    logger.error(
-                        f"User: {display_name} ({user_id}). status_code: sign failed"
-                    )
-                    reply_message = TextSendMessage(text="簽到失敗！請通知作者！")
-                else:
-                    logger.info(
-                        f"User: {display_name} ({user_id}). status_code: sign success"
-                    )
-                    total_sign_day = result["data"]["total_sign_day"]
-                    award = helper.awards[total_sign_day]
-
-                    reply_message = flex_template.sign_award(award=award)
+                reply_message = handle_sign_result(
+                    helper=helper,
+                    display_name=display_name,
+                    user_id=user_id,
+                    result=result,
+                )
         else:
             reply_message = TextSendMessage("不好意思，目前我還聽不懂你在說什麼呢><")
         line_bot_api.reply_message(reply_token, reply_message)
@@ -147,3 +135,35 @@ def find_user_cookie(user_id: str) -> str:
         return cookie
     else:
         return ""
+
+
+def handle_sign_result(
+    helper: Helper, display_name: str, user_id: str, result: dict
+) -> TextMessage | FlexSendMessage:
+    """Handle Sign Result
+
+    Args:
+        helper (Helper): Helper Object
+        display_name (str): User's LINE Display Name
+        user_id (str): User's LINE ID
+        result (dict): Sign Result
+
+    Returns:
+        TextMessage|FlexSendMessage: Reply Message
+    """
+    # Login Failed
+    if result["retcode"] != 0:
+        logger.error(f"User: {display_name} ({user_id}). status_code: login failed")
+        reply_message = TextSendMessage(text="登入失敗，請重新登入！")
+    # Sign Failed
+    elif not result["data"]["is_sign"]:
+        logger.error(f"User: {display_name} ({user_id}). status_code: sign failed")
+        reply_message = TextSendMessage(text="簽到失敗！請通知作者！")
+    # Sign Success
+    else:
+        logger.info(f"User: {display_name} ({user_id}). status_code: sign success")
+        total_sign_day = result["data"]["total_sign_day"]
+        award = helper.awards[total_sign_day]
+
+        reply_message = flex_template.sign_award(award=award)
+    return reply_message
