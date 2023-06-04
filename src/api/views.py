@@ -1,9 +1,9 @@
 from fastapi import APIRouter
 from fastapi.responses import JSONResponse
 
-import config
-from api import models
-from utils.logging_util import get_logger
+from src import config
+from src.api import models
+from src.utils.logging_util import get_logger
 
 logger = get_logger()
 

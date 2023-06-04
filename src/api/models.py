@@ -2,11 +2,11 @@ import pickle
 
 from linebot import LineBotApi
 
-import config
-from line.controller import handle_sign_result
-from utils.genshin_models import Account
-from utils.helper import Helper
-from utils.logging_util import get_logger
+from src import config
+from src.line.controller import handle_sign_result
+from src.utils.genshin_models import Account
+from src.utils.helper import Helper
+from src.utils.logging_util import get_logger
 
 logger = get_logger()
 line_bot_api = LineBotApi(config.LINE_CHANNEL_ACCESS_TOKEN)

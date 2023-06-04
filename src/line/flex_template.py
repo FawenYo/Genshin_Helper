@@ -4,7 +4,7 @@ from datetime import datetime
 import pytz
 from linebot.models import FlexSendMessage
 
-from utils.genshin_models import Award
+from src.utils.genshin_models import Award
 
 true = True
 taipei_timezone = pytz.timezone("Asia/Taipei")
@@ -22,7 +22,7 @@ def sign_award(award: Award) -> FlexSendMessage:
     now = datetime.now(taipei_timezone)
 
     now_text = now.strftime("%Y/%m/%d %H:%M:%S")
-    with open("line/flex_message_template/sign_award.json") as json_file:
+    with open("src/line/flex_message_template/sign_award.json") as json_file:
         contents = json.load(json_file)
     contents["hero"]["url"] = award.icon
     contents["body"]["contents"][1]["contents"][1][

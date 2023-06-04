@@ -3,15 +3,15 @@ from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
-from api.urls import url as api_url
-from line.urls import url as line_url
-from pages.urls import url as page_url
+from src.api.urls import url as api_url
+from src.line.urls import url as line_url
+from src.pages.urls import url as page_url
 
 app = FastAPI()
 
-templates = Jinja2Templates(directory="templates")
+templates = Jinja2Templates(directory="src/templates")
 
-app.mount("/static", StaticFiles(directory="static"), name="static")
+app.mount("/static", StaticFiles(directory="src/static"), name="static")
 # View
 app.include_router(page_url)
 # LINE Bot

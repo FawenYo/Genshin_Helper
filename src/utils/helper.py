@@ -1,8 +1,8 @@
 import requests
 
-from config import USER_AGENT
-from utils.genshin_models import Account, Award
-from utils.logging_util import get_logger
+from src import config
+from src.utils.genshin_models import Account, Award
+from src.utils.logging_util import get_logger
 
 logger = get_logger()
 
@@ -31,7 +31,7 @@ class Helper:
             "Accept-Encoding": "gzip, deflate, br",
             "Cookie": f"_MHYUUID={self.uuid}; mi18nLang={lang}",
             "Referer": "https://webstatic-sea.mihoyo.com/",
-            "User-Agent": USER_AGENT,
+            "User-Agent": config.USER_AGENT,
         }
         response = requests.get(url=url, headers=headers, params=payload).json()
         for index, each in enumerate(response["data"]["awards"]):
@@ -54,7 +54,7 @@ class Helper:
             "Accept-Encoding": "application/json, text/plain, */*",
             "Cookie": f"mi18nLang={lang}; _MHYUUID={self.uuid}; account_id={self.account_id}; cookie_token={self.cookie_token}; ltoken={self.ltoken}; ltuid={self.ltuid}",
             "Referer": "https://webstatic-sea.mihoyo.com/",
-            "User-Agent": USER_AGENT,
+            "User-Agent": config.USER_AGENT,
         }
         response = requests.post(
             url="https://hk4e-api-os.mihoyo.com/event/sol/sign?lang=zh-tw",
@@ -76,7 +76,7 @@ class Helper:
             "Accept-Encoding": "gzip, deflate, br",
             "Cookie": f"mi18nLang={lang}; _MHYUUID={self.uuid}; account_id={self.account_id}; cookie_token={self.cookie_token}; ltoken={self.ltoken}; ltuid={self.ltuid}",
             "Referer": "https://webstatic-sea.mihoyo.com/",
-            "User-Agent": USER_AGENT,
+            "User-Agent": config.USER_AGENT,
         }
         payload = {"act_id": act_id, "lang": lang}
         response = requests.get(
