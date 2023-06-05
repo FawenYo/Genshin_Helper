@@ -8,7 +8,9 @@ logger = get_logger()
 
 
 class Helper:
-    def __init__(self, account: Account) -> None:
+    def __init__(self, cookies: str) -> None:
+        account = Account(cookies=cookies)
+
         self.awards: dict[int, Award] = {}
         self.account_id: str = account.account_id
         self.uuid: str = account.uuid

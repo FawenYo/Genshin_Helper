@@ -18,9 +18,7 @@ async def daily_sign_in() -> None:
     for user_id, cookie in users.items():
         profile = line_bot_api.get_profile(user_id)
         display_name = profile.display_name
-        account = Account(cookies=cookie)
-
-        helper = Helper(account=account)
+        helper = Helper(cookies=cookie)
         result = helper.run()
 
         reply_message = handle_sign_result(

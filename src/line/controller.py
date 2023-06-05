@@ -64,9 +64,7 @@ def handle_message(event) -> None:
         elif "/登入 " in user_message:
             cookie = user_message.split("/登入 ")[1]
             try:
-                account = Account(cookies=cookie)
-
-                helper = Helper(account=account)
+                helper = Helper(cookies=cookie)
                 result = helper.account_status()
 
                 if result["retcode"] != 0:
@@ -104,9 +102,7 @@ def handle_message(event) -> None:
                 )
                 reply_message = TextSendMessage("尚未綁定帳號！")
             else:
-                account = Account(cookies=cookie)
-
-                helper = Helper(account=account)
+                helper = Helper(cookies=cookie)
                 result = helper.run()
 
                 reply_message = handle_sign_result(
