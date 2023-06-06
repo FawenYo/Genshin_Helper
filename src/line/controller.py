@@ -7,7 +7,6 @@ from linebot.models import *
 from src import config
 from src.line import flex_template
 from src.line.line_config import handler, line_bot_api
-from src.utils.genshin_models import Account
 from src.utils.helper import Helper
 from src.utils.logging_util import get_logger
 
@@ -16,7 +15,7 @@ logger = get_logger()
 
 
 @controller.post("/callback")
-async def callback(request: Request) -> str:
+async def callback(request: Request) -> None:
     """LINE Bot Webhook Callback
 
     Args:
@@ -24,18 +23,14 @@ async def callback(request: Request) -> str:
 
     Raises:
         HTTPException: Signature Invalid
-
-    Returns:
-        str: OK
     """
     signature = request.headers["X-Line-Signature"]
     body = await request.body()
     # handle webhook body
     try:
-        handler.handle(body.decode(), signature)
+        handler.handle(body=body.decode(), signature=signature)
     except InvalidSignatureError:
         raise HTTPException(status_code=400, detail="Missing Parameter")
-    return "OK"
 
 
 @handler.add(MessageEvent, message=(TextMessage,))
@@ -52,7 +47,7 @@ def handle_message(event) -> None:
 
     # 文字訊息
     if isinstance(event.message, TextMessage):
-        user_message = event.message.text
+        user_message: str = event.message.text
 
         logger.info(f"User: {display_name} ({user_id}). message: {user_message}")
 

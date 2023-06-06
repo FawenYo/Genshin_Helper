@@ -1,3 +1,4 @@
+import genshin
 import requests
 
 from src import config
@@ -8,7 +9,7 @@ logger = get_logger()
 
 
 class Helper:
-    def __init__(self, cookies: str) -> None:
+    def __init__(self, cookies: str, lang: str = "zh-tw") -> None:
         account = Account(cookies=cookies)
 
         self.awards: dict[int, Award] = {}
@@ -17,6 +18,11 @@ class Helper:
         self.cookie_token: str = account.cookie_token
         self.ltoken: str = account.ltoken
         self.ltuid: str = account.ltuid
+
+        client_cookies = {"ltuid": account.ltuid, "ltoken": account.ltoken}
+        self.client = genshin.Client(
+            client_cookies, lang=lang, game=genshin.Game.GENSHIN
+        )
 
     def get_month_award(
         self, act_id: str = "e202102251931481", lang: str = "zh-tw"
@@ -64,6 +70,21 @@ class Helper:
             params=payload,
         ).json()
         logger.debug(f"Sign in result: {response}")
+
+        return self.account_status()
+
+    async def claim_daily_reward(self):
+        """Sign in to Hoyolab"""
+        self.get_month_award()
+
+        try:
+            reward = await self.client.claim_daily_reward()
+        except genshin.AlreadyClaimed:
+            logger.warning("Daily reward already claimed")
+        except Exception as e:
+            logger.error(f"Error claiming daily reward: {e}")
+        else:
+            logger.info(f"Claimed {reward.amount}x {reward.name}")
 
         return self.account_status()
 

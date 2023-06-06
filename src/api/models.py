@@ -4,7 +4,6 @@ from linebot import LineBotApi
 
 from src import config
 from src.line.controller import handle_sign_result
-from src.utils.genshin_models import Account
 from src.utils.helper import Helper
 from src.utils.logging_util import get_logger
 
@@ -19,7 +18,7 @@ async def daily_sign_in() -> None:
         profile = line_bot_api.get_profile(user_id)
         display_name = profile.display_name
         helper = Helper(cookies=cookie)
-        result = helper.run()
+        result = await helper.claim_daily_reward()
 
         reply_message = handle_sign_result(
             helper=helper, display_name=display_name, user_id=user_id, result=result
