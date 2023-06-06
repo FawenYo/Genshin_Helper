@@ -1,8 +1,33 @@
 {
-    "python.pythonPath": ".venv/bin/python3.8",
-    "python.terminal.activateEnvInCurrentTerminal": true,
-    "python.analysis.completeFunctionParens": true,
-    "python.analysis.extraPaths": [
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "cwd": "${workspaceFolder}/src",
+            "name": "Python: Current File",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "justMyCode": true
+        },
+        {
+            "name": "Docker: Python",
+            "type": "docker",
+            "request": "launch",
+            "preLaunchTask": "docker-run: debug",
+            "python": {
+              "pathMappings": [
+                {
+                  "localRoot": "${workspaceFolder}",
+                  "remoteRoot": "/app"
+                },
+              ],
+              "projectType": "general"
+            }
+          }
     ],
-    "git.ignoreLimitWarning": true
+    "python.analysis.typeCheckingMode": "basic"
 }

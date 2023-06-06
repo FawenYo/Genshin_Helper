@@ -7,7 +7,8 @@ from linebot.models import *
 from src import config
 from src.line import flex_template
 from src.line.line_config import handler, line_bot_api
-from src.utils.helper import Helper
+from src.utils.genshin_helper import GenshinHelper
+from src.utils.genshin_models import DailyReward
 from src.utils.logging_util import get_logger
 
 controller = APIRouter()
@@ -49,7 +50,7 @@ def handle_message(event) -> None:
     if isinstance(event.message, TextMessage):
         user_message: str = event.message.text
 
-        logger.info(f"User: {display_name} ({user_id}). message: {user_message}")
+        logger.info(f"User: {display_name} ({user_id}). Message: {user_message}")
 
         if user_message == "登入":
             reply_message = TextSendMessage(
@@ -59,12 +60,12 @@ def handle_message(event) -> None:
         elif "/登入 " in user_message:
             cookie = user_message.split("/登入 ")[1]
             try:
-                helper = Helper(cookies=cookie)
+                helper = GenshinHelper(cookies=cookie)
                 result = helper.account_status()
 
                 if result["retcode"] != 0:
                     logger.error(
-                        f"User: {display_name} ({user_id}). status_code: login failed"
+                        f"User: {display_name} ({user_id}). Status code: Login failed"
                     )
                     reply_message = TextSendMessage(text="登入失敗，請重新登入！")
                 else:
@@ -84,7 +85,7 @@ def handle_message(event) -> None:
                     reply_message = TextSendMessage(text="登入成功！ 每天半夜 01:00 自動幫您簽到！")
             except:
                 logger.error(
-                    f"User: {display_name} ({user_id}). status_code: cookies format error"
+                    f"User: {display_name} ({user_id}). Status code: Cookies format error"
                 )
                 reply_message = TextSendMessage(text="Cookies 格式錯誤！ 請重新輸入")
 
@@ -93,19 +94,36 @@ def handle_message(event) -> None:
 
             if cookie == "":
                 logger.error(
-                    f"User: {display_name} ({user_id}). status_code: not login"
+                    f"User: {display_name} ({user_id}). Status code: Not login"
                 )
                 reply_message = TextSendMessage("尚未綁定帳號！")
             else:
-                helper = Helper(cookies=cookie)
+                helper = GenshinHelper(cookies=cookie)
                 result = helper.run()
 
-                reply_message = handle_sign_result(
-                    helper=helper,
-                    display_name=display_name,
-                    user_id=user_id,
-                    result=result,
-                )
+                # Login Failed
+                if result["retcode"] != 0:
+                    logger.error(
+                        f"User: {display_name} ({user_id}). status_code: login failed"
+                    )
+                    reply_message = TextSendMessage(text="登入失敗，請重新登入！")
+                # Sign Failed
+                elif not result["data"]["is_sign"]:
+                    logger.error(
+                        f"User: {display_name} ({user_id}). status_code: sign failed"
+                    )
+                    reply_message = TextSendMessage(text="簽到失敗！請通知作者！")
+                # Sign Success
+                else:
+                    logger.info(
+                        f"User: {display_name} ({user_id}). status_code: sign success"
+                    )
+                    total_sign_day = result["data"]["total_sign_day"]
+                    award = helper.awards[total_sign_day]
+
+                    reply_message = handle_sign_result(
+                        display_name=display_name, user_id=user_id, award=award
+                    )
         else:
             reply_message = TextSendMessage("不好意思，目前我還聽不懂你在說什麼呢><")
         line_bot_api.reply_message(reply_token, reply_message)
@@ -129,32 +147,23 @@ def find_user_cookie(user_id: str) -> str:
 
 
 def handle_sign_result(
-    helper: Helper, display_name: str, user_id: str, result: dict
+    display_name: str, user_id: str, award: DailyReward | None = None
 ) -> TextMessage | FlexSendMessage:
-    """Handle Sign Result
+    """Handle Genshin Daily Sign-in Result
 
     Args:
-        helper (Helper): Helper Object
         display_name (str): User's LINE Display Name
         user_id (str): User's LINE ID
-        result (dict): Sign Result
+        award (DailyReward, optional): Daily Sign-in Reward. Defaults to None.
 
     Returns:
         TextMessage|FlexSendMessage: Reply Message
     """
-    # Login Failed
-    if result["retcode"] != 0:
-        logger.error(f"User: {display_name} ({user_id}). status_code: login failed")
-        reply_message = TextSendMessage(text="登入失敗，請重新登入！")
-    # Sign Failed
-    elif not result["data"]["is_sign"]:
-        logger.error(f"User: {display_name} ({user_id}). status_code: sign failed")
-        reply_message = TextSendMessage(text="簽到失敗！請通知作者！")
-    # Sign Success
-    else:
-        logger.info(f"User: {display_name} ({user_id}). status_code: sign success")
-        total_sign_day = result["data"]["total_sign_day"]
-        award = helper.awards[total_sign_day]
-
+    if award:
+        logger.info(f"User: {display_name} ({user_id}). Status code: Sign-in success")
         reply_message = flex_template.sign_award(award=award)
+    # Encountered Error when claiming daily sign-in reward
+    else:
+        logger.error(f"User: {display_name} ({user_id}). Status_code: Sign-in failed")
+        reply_message = TextSendMessage(text="簽到失敗！請通知作者！")
     return reply_message

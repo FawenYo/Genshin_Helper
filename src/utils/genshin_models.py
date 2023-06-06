@@ -1,3 +1,6 @@
+from dataclasses import dataclass
+
+
 class Account:
     def __init__(self, cookies: str) -> None:
         self.cookies: str = cookies
@@ -13,10 +16,10 @@ class Account:
 
     def parse_cookies(self) -> None:
         """Parse Information from cookies' string"""
-        cookies = self.cookies.split("; ")
+        cookies: list[str] = self.cookies.split("; ")
         for each in cookies:
-            is_required = False
-            required_info = [
+            is_required: bool = False
+            required_info: list[str] = [
                 "_MHYUUID",
                 "account_id",
                 "cookie_token",
@@ -30,20 +33,21 @@ class Account:
             if is_required:
                 key, value = each.split("=")
 
-                if key == "_MHYUUID":
-                    self.uuid = value
-                elif key == "account_id":
-                    self.account_id = value
-                elif key == "cookie_token":
-                    self.cookie_token = value
-                elif key == "ltoken":
-                    self.ltoken = value
-                elif key == "ltuid":
-                    self.ltuid = value
+                match key:
+                    case "_MHYUUID":
+                        self.uuid = value
+                    case "account_id":
+                        self.account_id = value
+                    case "cookie_token":
+                        self.cookie_token = value
+                    case "ltoken":
+                        self.ltoken = value
+                    case "ltuid":
+                        self.ltuid = value
 
 
-class Award:
-    def __init__(self, name: str, count: int, icon: str) -> None:
-        self.name: str = name
-        self.count: int = count
-        self.icon: str = icon
+@dataclass
+class DailyReward:
+    icon: str
+    name: str
+    amount: int
