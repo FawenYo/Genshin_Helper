@@ -20,13 +20,17 @@ async def all_daily_sign_in() -> None:
         display_name = profile.display_name
         helper = GenshinHelper(cookies=cookie)
         award: DailyReward | None = None
+        error_message: str = ""
         try:
             award = await helper.claim_daily_reward()
         except Exception as e:
-            logger.error(f"User: {display_name} ({user_id}). Exception message: {e}")
+            error_message = str(e)
         finally:
             reply_message = handle_sign_result(
-                display_name=display_name, user_id=user_id, award=award
+                display_name=display_name,
+                user_id=user_id,
+                award=award,
+                error_message=error_message,
             )
         # Push Message
         line_bot_api.push_message(user_id, reply_message)
